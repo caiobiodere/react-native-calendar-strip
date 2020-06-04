@@ -23,11 +23,14 @@ class CalendarDay extends Component {
     showDayName: PropTypes.bool,
     showDayNumber: PropTypes.bool,
 
+    dayNameFormatValue: PropTypes.string,
     calendarColor: PropTypes.string,
     size: PropTypes.number,
+    containerBorderRadius: PropTypes.number,
 
     dateNameStyle: PropTypes.any,
     dateNumberStyle: PropTypes.any,
+    dateContainerStyle: PropTypes.any,
     weekendDateNameStyle: PropTypes.any,
     weekendDateNumberStyle: PropTypes.any,
     highlightDateNameStyle: PropTypes.any,
@@ -62,7 +65,8 @@ class CalendarDay extends Component {
     },
     styleWeekend: true,
     showDayName: true,
-    showDayNumber: true
+    showDayNumber: true,
+    dayNameFormatValue: "ddd"
   };
 
   constructor(props) {
@@ -151,7 +155,7 @@ class CalendarDay extends Component {
   calcSizes = props => {
     return {
       containerSize: Math.round(props.size),
-      containerBorderRadius: Math.round(props.size / 2),
+      containerBorderRadius: props.containerBorderRadius || Math.round(props.size / 2),
       dateNameFontSize: Math.round(props.size / 5),
       dateNumberFontSize: Math.round(props.size / 2.9)
     };
@@ -307,6 +311,7 @@ class CalendarDay extends Component {
       date,
       dateNameStyle,
       dateNumberStyle,
+      dateContainerStyle,
       disabledDateNameStyle,
       disabledDateNumberStyle,
       disabledDateOpacity,
@@ -323,6 +328,7 @@ class CalendarDay extends Component {
       allowDayTextScaling,
       dayComponent: DayComponent,
       scrollable,
+      dayNameFormatValue,
     } = this.props;
     const {
       enabled,
@@ -389,8 +395,8 @@ class CalendarDay extends Component {
     }
 
     let responsiveDateContainerStyle = {
-      width: containerSize,
-      height: containerSize,
+      width: dateContainerStyle.width || containerSize,
+      height: dateContainerStyle.height || containerSize,
       borderRadius: containerBorderRadius,
     };
 
@@ -408,7 +414,8 @@ class CalendarDay extends Component {
             style={[
               styles.dateContainer,
               responsiveDateContainerStyle,
-              _dateViewStyle
+              _dateViewStyle,
+              dateContainerStyle,
             ]}
           >
             {showDayName && (
@@ -416,7 +423,7 @@ class CalendarDay extends Component {
                 style={[{ fontSize: dateNameFontSize }, _dateNameStyle]}
                 allowFontScaling={allowDayTextScaling}
               >
-                {date.format("ddd").toUpperCase()}
+                {date.format(dayNameFormatValue).toUpperCase()}
               </Text>
             )}
             {showDayNumber && (

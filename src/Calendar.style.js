@@ -21,6 +21,12 @@ export default StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  calendarHeaderView: {
+    flexDirection: "row",
+    flex: 1,
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
   calendarHeader: {
     textAlign: "center",
     fontWeight: "bold",
@@ -42,7 +48,7 @@ export default StyleSheet.create({
   dateContainer: {
     justifyContent: "center",
     alignItems: "center",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   dateName: {
     textAlign: "center"

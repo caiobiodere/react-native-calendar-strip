@@ -69,6 +69,7 @@ class CalendarStrip extends Component {
 
     dateNameStyle: PropTypes.any,
     dateNumberStyle: PropTypes.any,
+    dateContainerStyle: PropTypes.any,
     weekendDateNameStyle: PropTypes.any,
     weekendDateNumberStyle: PropTypes.any,
     highlightDateNameStyle: PropTypes.any,
@@ -78,10 +79,12 @@ class CalendarStrip extends Component {
     markedDatesStyle: PropTypes.object,
     disabledDateOpacity: PropTypes.number,
     styleWeekend: PropTypes.bool,
+    containerDayBorderRadius: PropTypes.number,
 
     locale: PropTypes.object,
     shouldAllowFontScaling: PropTypes.bool,
-    useNativeDriver: PropTypes.bool
+    useNativeDriver: PropTypes.bool,
+    dayNameFormatValue: PropTypes.string,
   };
 
   static defaultProps = {
@@ -103,7 +106,8 @@ class CalendarStrip extends Component {
     minDayComponentSize: 10,
     shouldAllowFontScaling: true,
     markedDates: [],
-    useNativeDriver: true
+    useNativeDriver: true,
+    dayNameFormatValue: "ddd"
   };
 
   constructor(props) {
@@ -403,6 +407,7 @@ class CalendarStrip extends Component {
       calendarColor: this.props.calendarColor,
       dateNameStyle: this.props.dateNameStyle,
       dateNumberStyle: this.props.dateNumberStyle,
+      dateContainerStyle: this.props.dateContainerStyle,
       weekendDateNameStyle: this.props.weekendDateNameStyle,
       weekendDateNumberStyle: this.props.weekendDateNumberStyle,
       highlightDateNameStyle: this.props.highlightDateNameStyle,
@@ -419,8 +424,10 @@ class CalendarStrip extends Component {
       customDatesStyles: this.props.customDatesStyles,
       markedDates: this.props.markedDates,
       size: this.state.dayComponentWidth,
+      containerBorderRadius: this.props.containerDayBorderRadius,
       marginHorizontal: this.state.marginHorizontal,
       allowDayTextScaling: this.props.shouldAllowFontScaling,
+      dayNameFormatValue: this.props.dayNameFormatValue,
     }
   }
 
@@ -522,6 +529,36 @@ class CalendarStrip extends Component {
     return days;
   }
 
+  renderLeftWeekSelector() {
+    return <WeekSelector
+      controlDate={this.props.minDate}
+      iconComponent={this.props.leftSelector}
+      iconContainerStyle={this.props.iconContainer}
+      iconInstanceStyle={this.props.iconLeftStyle}
+      iconStyle={this.props.iconStyle}
+      imageSource={this.props.iconLeft}
+      onPress={this.getPreviousWeek}
+      weekStartDate={this.state.weekStartDate}
+      weekEndDate={this.state.weekEndDate}
+      size={this.state.selectorSize}
+    />
+  }
+
+  renderRightWeekSelector() {
+    return <WeekSelector
+      controlDate={this.props.maxDate}
+      iconComponent={this.props.rightSelector}
+      iconContainerStyle={this.props.iconContainer}
+      iconInstanceStyle={this.props.iconRightStyle}
+      iconStyle={this.props.iconStyle}
+      imageSource={this.props.iconRight}
+      onPress={this.getNextWeek}
+      weekStartDate={this.state.weekStartDate}
+      weekEndDate={this.state.weekEndDate}
+      size={this.state.selectorSize}
+    />
+  }
+
   render() {
     // calendarHeader renders above or below of the dates & left/right selectors if dates are shown.
     // However if dates are hidden, the header shows between the left/right selectors.
@@ -534,24 +571,15 @@ class CalendarStrip extends Component {
         ]}
       >
         <View style={[this.props.innerStyle, { height: this.state.height }]}>
-          {this.props.showDate && this.props.calendarHeaderPosition === "above" &&
-            this.renderHeader()
-          }
+          <View style={styles.calendarHeaderView}>
+            {this.renderLeftWeekSelector()}
+            {this.props.showDate && this.props.calendarHeaderPosition === "above" &&
+              this.renderHeader()
+            }
+            {this.renderRightWeekSelector()}
+          </View>
 
           <View style={styles.datesStrip}>
-            <WeekSelector
-              controlDate={this.props.minDate}
-              iconComponent={this.props.leftSelector}
-              iconContainerStyle={this.props.iconContainer}
-              iconInstanceStyle={this.props.iconLeftStyle}
-              iconStyle={this.props.iconStyle}
-              imageSource={this.props.iconLeft}
-              onPress={this.getPreviousWeek}
-              weekStartDate={this.state.weekStartDate}
-              weekEndDate={this.state.weekEndDate}
-              size={this.state.selectorSize}
-            />
-
             <View onLayout={this.onLayout} style={styles.calendarDates}>
               {this.props.showDate ? (
                 this.renderWeekView(this.state.days)
@@ -559,19 +587,6 @@ class CalendarStrip extends Component {
                 this.renderHeader()
               )}
             </View>
-
-            <WeekSelector
-              controlDate={this.props.maxDate}
-              iconComponent={this.props.rightSelector}
-              iconContainerStyle={this.props.iconContainer}
-              iconInstanceStyle={this.props.iconRightStyle}
-              iconStyle={this.props.iconStyle}
-              imageSource={this.props.iconRight}
-              onPress={this.getNextWeek}
-              weekStartDate={this.state.weekStartDate}
-              weekEndDate={this.state.weekEndDate}
-              size={this.state.selectorSize}
-            />
           </View>
 
           {this.props.showDate && this.props.calendarHeaderPosition === "below" &&
