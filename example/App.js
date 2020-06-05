@@ -81,6 +81,7 @@ export default class App extends Component<{}> {
           datesBlacklist={this.datesBlacklistFunc}
           onDateSelected={this.onDateSelected}
           useIsoWeekday={false}
+          dateContainerStyle={{height: 100}}
         />
         <Text style={{fontSize: 24}}>Selected Date: {this.state.formattedDate}</Text>
       </View>

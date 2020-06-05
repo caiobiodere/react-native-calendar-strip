@@ -524,6 +524,7 @@ class CalendarStrip extends Component {
           minDate={this.props.minDate}
           maxDate={this.props.maxDate}
           updateMonthYear={this.updateMonthYear}
+          scrollHeight={this.props.dateContainerStyle.height}
         />
       );
     }

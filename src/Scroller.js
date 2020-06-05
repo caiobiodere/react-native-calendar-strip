@@ -21,6 +21,7 @@ export default class CalendarScroller extends Component {
     maxDate: PropTypes.any,
     maxSimultaneousDays: PropTypes.number,
     updateMonthYear: PropTypes.func,
+    scrollHeight: PropTypes.number,
   }
 
   static defaultProps = {
@@ -32,8 +33,8 @@ export default class CalendarScroller extends Component {
     super(props);
 
     this.updateLayout = renderDayParams => {
-      const itemHeight = renderDayParams.size;
-      const itemWidth = itemHeight + renderDayParams.marginHorizontal * 2;
+      const itemHeight = props.scrollHeight || renderDayParams.size;
+      const itemWidth = renderDayParams.size + renderDayParams.marginHorizontal * 2;
 
       const layoutProvider = new LayoutProvider(
         index => 0, // only 1 view type
