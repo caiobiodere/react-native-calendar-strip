@@ -13,9 +13,6 @@
   <a href="https://github.com/feross/standard">
     <img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square" alt="standard JS linter" />
   </a>
-  <a href="https://github.com/prettier/prettier">
-    <img src="https://img.shields.io/badge/styled_with-prettier-ff69b4.svg?style=flat-square" alt="prettier code formatting" />
-  </a>
   <a href="https://github.com/BugiDev/react-native-calendar-strip/blob/master/LICENSE.md">
     <img src="https://img.shields.io/npm/l/react-native-calendar-strip.svg?style=flat-square" alt="project license" />
   </a>
@@ -193,16 +190,17 @@ AppRegistry.registerComponent('Example', () => Example);
 | **`scrollable`**     | Dates are scrollable if true.                                                                                                                                      | Bool     | **`False`**|
 | **`startingDate`**   | Date to be used for centering the calendar/showing the week based on that date. It is internally wrapped by `moment` so it accepts both `Date` and `moment Date`.  | Any      |
 | **`selectedDate`**   | Date to be used as pre selected Date. It is internally wrapped by `moment` so it accepts both `Date` and `moment Date`.                                            | Any      |
-| **`onDateSelected`** | Function to be used as a callback when a date is selected. It returns `moment Date`                                                                                | Function |
-| **`onWeekChanged`**  | Function to be used as a callback when a week is changed. It returns `moment Date`                                                                                 | Function |
-| **`onHeaderSelected`**| Function to be used as a callback when the header is selected. It returns `{weekStartDate, weekEndDate}` as `moment Dates`                                         | Function |
+| **`onDateSelected`** | Function to be used as a callback when a date is selected. Receives param `date` Moment date.                                                                      | Function |
+| **`onWeekChanged`**  | Function to be used as a callback when a week is changed. Receives params `(start, end)` Moment dates.                                                     | Function |
+| **`onHeaderSelected`**| Function to be used as a callback when the header is selected. Receives param object `{weekStartDate, weekEndDate}` Moment dates.                                 | Function |
+| **`headerText`**     | Text to use in the header. Use with `onWeekChanged` to receive the visible start & end dates.                                                                      | String  |
 | **`updateWeek`**     | Update the week view if other props change. If `false`, the week view won't change when other props change, but will still respond to left/right selectors.        | Bool     | **`True`** |
 | **`useIsoWeekday`**  | start week on ISO day of week (default true). If false, starts week on _startingDate_ parameter.                                                                   | Bool     | **`True`** |
 | **`minDate`**        | minimum date that the calendar may navigate to. A week is allowed if minDate falls within the current week.                                                        | Any      |
 | **`maxDate`**        | maximum date that the calendar may navigate to. A week is allowed if maxDate falls within the current week.                                                        | Any      |
 | **`datesWhitelist`** | Array of dates that are enabled, or a function callback which receives a date param and returns true if enabled. Array supports ranges specified with an object entry in the array. Check example <a href="#dateswhitelist-array-example">Below</a> | Array or Func |
 | **`datesBlacklist`** | Array of dates that are disabled, or a function callback. Same format as _datesWhitelist_. This overrides dates in _datesWhitelist_.                               | Array or Func |
-| **`markedDates`**    | Dates that are marked. Format as <a href="#markedDatesFormat-array-example">markedDatesFormat</a>.                                                                 | Array or Func | **[]**
+| **`markedDates`**    | Dates that are marked with dots or lines. Format as <a href="#markeddates-example">markedDatesFormat</a>.                                                          | Array or Func | **[]**
 
 
 ##### datesWhitelist Array Example
@@ -240,12 +238,12 @@ AppRegistry.registerComponent('Example', () => Example);
   );
 ```
 
-##### markedDatesFormat Example
+##### markedDates Example
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/6241354/50537547-f1f3af80-0b71-11e9-806d-2ca3294f8b2e.png "react-native-calendar-strip marked dates example" alt="">
+  <img src="https://user-images.githubusercontent.com/6295083/83835989-e1752c00-a6b7-11ea-9104-c79a26438c50.png" alt="marked dates example">
 </div>
 
-`markedDates` may be an array of dates with dots, or a callback that returns the same shaped object for a date passed to it.
+`markedDates` may be an array of dates with dots/lines, or a callback that returns the same shaped object for a date passed to it.
 
 ```jsx
   // Marked dates array format
@@ -254,22 +252,42 @@ AppRegistry.registerComponent('Example', () => Example);
       date: '(string, Date or Moment object)',
       dots: [
         {
-          key: (unique number or string),
-          color: string,
-          selectedDotColor: string,
+          color: <string>,
+          selectedColor: <string> (optional),
+        },
+      ],
+    },
+    {
+      date: '(string, Date or Moment object)',
+      lines: [
+        {
+          color: <string>,
+          selectedColor: <string> (optional),
         },
       ],
     },
   ];
 
+```
+
+```jsx
   // Marked dates callback
   markedDatesFunc = date => {
+    // Dot
     if (date.isoWeekday() === 4) { // Thursdays
       return {
         dots:[{
-          key: date.format('YYYY-MM-DD'),
-          color: 'red',
-          selectedDotColor: 'yellow',
+          color: <string>,
+          selectedColor: <string> (optional),
+        }]
+      };
+    }
+    // Line
+    if (date.isoWeekday() === 6) { // Saturdays
+      return {
+        lines:[{
+          color: <string>,
+          selectedColor: <string> (optional),
         }]
       };
     }
@@ -605,7 +623,7 @@ Or open up [an issue](https://github.com/BugiDev/react-native-calendar-strip/iss
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore -->
+
 | [<img src="https://avatars0.githubusercontent.com/u/4005545?v=4" width="100px;"/><br /><sub><b>Bogdan Begovic</b></sub>](https://github.com/BugiDev)<br />[💬](#question-BugiDev "Answering Questions") [💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=BugiDev "Code") [🎨](#design-BugiDev "Design") [📖](https://github.com/bugidev/react-native-calendar-strip/commits?author=BugiDev "Documentation") [💡](#example-BugiDev "Examples") [🔧](#tool-BugiDev "Tools") | [<img src="https://avatars3.githubusercontent.com/u/6295083?v=4" width="100px;"/><br /><sub><b>Peace</b></sub>](https://github.com/peacechen)<br />[💬](#question-peacechen "Answering Questions") [🐛](https://github.com/bugidev/react-native-calendar-strip/issues?q=author%3Apeacechen "Bug reports") [💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=peacechen "Code") [📖](https://github.com/bugidev/react-native-calendar-strip/commits?author=peacechen "Documentation") [👀](#review-peacechen "Reviewed Pull Requests") | [<img src="https://avatars1.githubusercontent.com/u/15834048?v=4" width="100px;"/><br /><sub><b>Chris Burns</b></sub>](http://www.usebillo.com)<br />[💬](#question-Burnsy "Answering Questions") [🐛](https://github.com/bugidev/react-native-calendar-strip/issues?q=author%3ABurnsy "Bug reports") [💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=Burnsy "Code") [📖](https://github.com/bugidev/react-native-calendar-strip/commits?author=Burnsy "Documentation") [🔧](#tool-Burnsy "Tools") [💡](#example-Burnsy "Examples") [👀](#review-Burnsy "Reviewed Pull Requests") | [<img src="https://avatars0.githubusercontent.com/u/26348965?v=4" width="100px;"/><br /><sub><b>samcolby</b></sub>](https://github.com/samcolby)<br />[💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=samcolby "Code") [⚠️](https://github.com/bugidev/react-native-calendar-strip/commits?author=samcolby "Tests") | [<img src="https://avatars0.githubusercontent.com/u/239360?v=4" width="100px;"/><br /><sub><b>Florian Biebel</b></sub>](https://chromosom23.de)<br />[💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=1ne8ight7even "Code") | [<img src="https://avatars0.githubusercontent.com/u/986135?v=4" width="100px;"/><br /><sub><b>Vitaliy Zhukov</b></sub>](http://intspirit.com/)<br />[💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=Vitall "Code") | [<img src="https://avatars1.githubusercontent.com/u/15323137?v=4" width="100px;"/><br /><sub><b>lbrdar</b></sub>](https://github.com/lbrdar)<br />[💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=lbrdar "Code") |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | [<img src="https://avatars0.githubusercontent.com/u/6774813?v=4" width="100px;"/><br /><sub><b>Dimka Vasilyev</b></sub>](https://github.com/gHashTag)<br />[💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=gHashTag "Code") | [<img src="https://avatars2.githubusercontent.com/u/6241354?v=4" width="100px;"/><br /><sub><b>Eugene</b></sub>](https://github.com/hellpirat)<br />[💻](https://github.com/bugidev/react-native-calendar-strip/commits?author=hellpirat "Code") |

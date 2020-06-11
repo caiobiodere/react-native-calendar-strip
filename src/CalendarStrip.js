@@ -36,6 +36,7 @@ class CalendarStrip extends Component {
     maxDate: PropTypes.any,
     datesWhitelist: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
     datesBlacklist: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
+    headerText: PropTypes.string,
 
     markedDates: PropTypes.oneOfType([PropTypes.array, PropTypes.func]),
 
@@ -218,13 +219,6 @@ class CalendarStrip extends Component {
     }
     this.animations = [];
     const previousWeekStartDate = this.state.startingDate.clone().subtract(1, "w");
-    if (this.props.onWeekChanged) {
-      let _previousWeekStartDate = this.props.useIsoWeekday ?
-        previousWeekStartDate.clone().startOf("isoweek")
-        :
-        previousWeekStartDate;
-      this.props.onWeekChanged(_previousWeekStartDate);
-    }
     const days = this.createDays(previousWeekStartDate);
     this.setState({ startingDate: previousWeekStartDate, ...days });
   }
@@ -237,13 +231,6 @@ class CalendarStrip extends Component {
     }
     this.animations = [];
     const nextWeekStartDate = this.state.startingDate.clone().add(1, "w");
-    if (this.props.onWeekChanged) {
-      let _nextWeekStartDate = this.props.useIsoWeekday ?
-        nextWeekStartDate.clone().startOf("isoweek")
-        :
-        nextWeekStartDate.clone();
-      this.props.onWeekChanged(_nextWeekStartDate);
-    }
     const days = this.createDays(nextWeekStartDate);
     this.setState({ startingDate: nextWeekStartDate, ...days });
   }
@@ -297,7 +284,8 @@ class CalendarStrip extends Component {
       };
     }
     this.setState(newState);
-    this.props.onDateSelected && this.props.onDateSelected(selectedDate);
+    const _selectedDate = selectedDate && selectedDate.clone();
+    this.props.onDateSelected && this.props.onDateSelected(_selectedDate);
   }
 
   // Get the currently selected date (Moment JS object)
@@ -438,6 +426,7 @@ class CalendarStrip extends Component {
       scrollable,
       minDate,
       maxDate,
+      onWeekChanged,
     } = this.props;
     let _startingDate = startingDate;
     let days = [];
@@ -481,12 +470,18 @@ class CalendarStrip extends Component {
       }
     }
 
+    const weekStartDate = datesList[0].date;
+    const weekEndDate = datesList[this.state.numVisibleDays - 1].date;
+    const _weekStartDate = weekStartDate && weekStartDate.clone();
+    const _weekEndDate = weekEndDate && weekStartDate.clone();
+    onWeekChanged && onWeekChanged(_weekStartDate, _weekEndDate);
+
     return {
       days,
       datesList,
       initialScrollerIndex,
-      weekStartDate: datesList[0].date,
-      weekEndDate: datesList[this.state.numVisibleDays - 1].date,
+      weekStartDate,
+      weekEndDate,
     };
   }
 
@@ -507,6 +502,7 @@ class CalendarStrip extends Component {
         weekEndDate={this.state.weekEndDate}
         fontSize={this.state.monthFontSize}
         allowHeaderTextScaling={this.props.shouldAllowFontScaling}
+        headerText={this.props.headerText}
       />
     );
   }
@@ -525,6 +521,7 @@ class CalendarStrip extends Component {
           maxDate={this.props.maxDate}
           updateMonthYear={this.updateMonthYear}
           scrollHeight={this.props.dateContainerStyle.height}
+          onWeekChanged={this.props.onWeekChanged}
         />
       );
     }
