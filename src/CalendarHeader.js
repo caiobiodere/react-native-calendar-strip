@@ -19,6 +19,7 @@ class CalendarHeader extends Component {
     weekEndDate: PropTypes.object,
     allowHeaderTextScaling: PropTypes.bool,
     fontSize: PropTypes.number,
+    headerText: PropTypes.string,
     onHeaderSelected: PropTypes.func,
   };
 
@@ -74,10 +75,13 @@ class CalendarHeader extends Component {
       calendarHeaderStyle,
       fontSize,
       allowHeaderTextScaling,
-      weekStartDate,
-      weekEndDate,
+      weekStartDate: _weekStartDate,
+      weekEndDate: _weekEndDate,
+      headerText,
     } = this.props;
-    const headerText = this.formatCalendarHeader(calendarHeaderFormat);
+    const _headerText = headerText || this.formatCalendarHeader(calendarHeaderFormat);
+    const weekStartDate = _weekStartDate && _weekStartDate.clone();
+    const weekEndDate = _weekEndDate && _weekEndDate.clone();
 
     return (
       <TouchableOpacity
@@ -93,7 +97,7 @@ class CalendarHeader extends Component {
           ]}
           allowFontScaling={allowHeaderTextScaling}
         >
-          {headerText}
+          {_headerText}
         </Text>
       </TouchableOpacity>
     );
