@@ -24,6 +24,7 @@ class CalendarStrip extends Component {
     innerStyle: PropTypes.any,
     calendarColor: PropTypes.string,
 
+    numDaysInWeek: PropTypes.number,
     scrollable: PropTypes.bool,
     startingDate: PropTypes.any,
     selectedDate: PropTypes.any,
@@ -90,6 +91,7 @@ class CalendarStrip extends Component {
   };
 
   static defaultProps = {
+    numDaysInWeek: 7,
     useIsoWeekday: true,
     showMonth: true,
     showDate: true,
@@ -114,7 +116,6 @@ class CalendarStrip extends Component {
 
   constructor(props) {
     super(props);
-    this.numDaysInWeek = 7;
     this.numDaysScroll = 366; // prefer even number divisible by 3
 
     if (props.locale) {
@@ -334,6 +335,7 @@ class CalendarStrip extends Component {
 
   onLayoutDebounce = layout => {
     const {
+      numDaysInWeek,
       responsiveSizingOffset,
       maxDayComponentSize,
       minDayComponentSize,
@@ -342,11 +344,10 @@ class CalendarStrip extends Component {
       scrollable,
     } = this.props;
     let csWidth = PixelRatio.roundToNearestPixel(layout.width);
-    let numElements = this.numDaysInWeek;
-    let dayComponentWidth = csWidth / numElements + responsiveSizingOffset;
+    let dayComponentWidth = csWidth / numDaysInWeek + responsiveSizingOffset;
     dayComponentWidth = Math.min(dayComponentWidth, maxDayComponentSize);
     dayComponentWidth = Math.max(dayComponentWidth, minDayComponentSize);
-    let numVisibleDays = this.numDaysInWeek;
+    let numVisibleDays = numDaysInWeek;
     let marginHorizontal;
     if (scrollable) {
       numVisibleDays = Math.floor(csWidth / dayComponentWidth);
@@ -422,6 +423,7 @@ class CalendarStrip extends Component {
 
   createDays = (startingDate, selectedDate = this.state.selectedDate) => {
     const {
+      numDaysInWeek,
       useIsoWeekday,
       scrollable,
       minDate,
@@ -431,7 +433,7 @@ class CalendarStrip extends Component {
     let _startingDate = startingDate;
     let days = [];
     let datesList = [];
-    let numDays = this.numDaysInWeek;
+    let numDays = numDaysInWeek;
     let initialScrollerIndex;
 
     if (scrollable) {
