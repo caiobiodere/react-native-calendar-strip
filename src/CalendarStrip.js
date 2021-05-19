@@ -537,36 +537,6 @@ class CalendarStrip extends Component {
     return days;
   }
 
-  renderLeftWeekSelector() {
-    return <WeekSelector
-      controlDate={this.props.minDate}
-      iconComponent={this.props.leftSelector}
-      iconContainerStyle={this.props.iconContainer}
-      iconInstanceStyle={this.props.iconLeftStyle}
-      iconStyle={this.props.iconStyle}
-      imageSource={this.props.iconLeft}
-      onPress={this.getPreviousWeek}
-      weekStartDate={this.state.weekStartDate}
-      weekEndDate={this.state.weekEndDate}
-      size={this.state.selectorSize}
-    />
-  }
-
-  renderRightWeekSelector() {
-    return <WeekSelector
-      controlDate={this.props.maxDate}
-      iconComponent={this.props.rightSelector}
-      iconContainerStyle={this.props.iconContainer}
-      iconInstanceStyle={this.props.iconRightStyle}
-      iconStyle={this.props.iconStyle}
-      imageSource={this.props.iconRight}
-      onPress={this.getNextWeek}
-      weekStartDate={this.state.weekStartDate}
-      weekEndDate={this.state.weekEndDate}
-      size={this.state.selectorSize}
-    />
-  }
-
   render() {
     // calendarHeader renders above or below of the dates & left/right selectors if dates are shown.
     // However if dates are hidden, the header shows between the left/right selectors.
@@ -579,27 +549,11 @@ class CalendarStrip extends Component {
         ]}
       >
         <View style={[this.props.innerStyle, { height: this.state.height }]}>
-          {/* <View style={styles.calendarHeaderView}>
-            {this.renderLeftWeekSelector()}
-            {this.props.showDate && this.props.calendarHeaderPosition === "above" &&
-              this.renderHeader()
-            }
-            {this.renderRightWeekSelector()}
-          </View> */}
-
           <View style={styles.datesStrip}>
             <View onLayout={this.onLayout} style={styles.calendarDates}>
-              {this.props.showDate ? (
-                this.renderWeekView(this.state.days)
-              ) : (
-                this.renderHeader()
-              )}
+              {this.renderWeekView(this.state.days)}
             </View>
           </View>
-
-          {/* {this.props.showDate && this.props.calendarHeaderPosition === "below" &&
-            this.renderHeader()
-          } */}
         </View>
       </View>
     );
