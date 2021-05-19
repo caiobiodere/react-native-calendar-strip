@@ -579,13 +579,13 @@ class CalendarStrip extends Component {
         ]}
       >
         <View style={[this.props.innerStyle, { height: this.state.height }]}>
-          <View style={styles.calendarHeaderView}>
+          {/* <View style={styles.calendarHeaderView}>
             {this.renderLeftWeekSelector()}
             {this.props.showDate && this.props.calendarHeaderPosition === "above" &&
               this.renderHeader()
             }
             {this.renderRightWeekSelector()}
-          </View>
+          </View> */}
 
           <View style={styles.datesStrip}>
             <View onLayout={this.onLayout} style={styles.calendarDates}>
@@ -597,9 +597,9 @@ class CalendarStrip extends Component {
             </View>
           </View>
 
-          {this.props.showDate && this.props.calendarHeaderPosition === "below" &&
+          {/* {this.props.showDate && this.props.calendarHeaderPosition === "below" &&
             this.renderHeader()
-          }
+          } */}
         </View>
       </View>
     );
